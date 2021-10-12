@@ -1,0 +1,39 @@
+Cabal-version: 2.4
+
+Name: wasted-vote
+Version: 0.1
+
+Synopsis:
+    Calculate wasted vote under The New Electoral College.
+
+Description:
+    Wasted Votes are all votes that didn't affect the outcome of an election.
+    Had they not been cast, the seat count would have been the same.
+
+Homepage: https://newelectoralcollege.com
+
+License: BSD-3-Clause
+License-file: LICENSE
+
+Author:     TheNewElectoralCollege
+Maintainer: info@newelectoralcollege.com
+Copyright:  Copyright (c) 2021-present, The New Electoral College
+
+Build-type: Simple
+
+source-repository head
+    type:     git
+    location: git://github.com/NewElectoralCollege/wasted_vote.git
+
+
+Flag dev {
+  Description: Turn off optimization and make warnings errors
+  Default: False
+}
+
+
+Executable wasted-vote
+    main-is:          Main.hs
+    hs-source-dirs:   app
+    build-depends:    base ^>=4.15.0.0
+    default-language: Haskell2010
