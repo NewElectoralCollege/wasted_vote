@@ -1,5 +1,5 @@
 {
   "code-runner.executorMap": {
-    "haskell": "cabal build && echo"
+    "haskell": "cd $dir && cd .. && cabal build wasted-vote && dist-newstyle\\build\\x86_64-windows\\ghc-9.0.1\\wasted-vote-0.1\\x\\wasted-vote\\build\\wasted-vote\\wasted-vote tests/test1.json"
   }
 }
