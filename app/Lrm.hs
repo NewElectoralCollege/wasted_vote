@@ -2,6 +2,7 @@
 module Lrm where
 
 import Data.Aeson
+import Data.Aeson.Types
 import Data.List
 import Data.Ord
 
@@ -22,8 +23,9 @@ instance FromJSON Party where
     parseJSON = withObject "Party" $ \v -> Party
         <$> v .: "name"
         <*> v .: "votes"
-        <*> 0
-        <*> False
+        <*> pure 0
+        <*> pure False
+
 
 -- Calculation
 
