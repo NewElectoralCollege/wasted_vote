@@ -12,6 +12,8 @@ import qualified Data.ByteString.Lazy as B
 
 import Lrm
 import Brute
+import Party
+import Quota
 
 version = "0.1"
 
@@ -26,12 +28,14 @@ main =
 data Election = Election
     { parties :: [Party]
     , seats :: Int
-    } deriving (Show)
+    , quota :: Quota
+    }
 
 instance FromJSON Election where
     parseJSON = withObject "Election" $ \v -> Election
         <$> v .: "parties"
         <*> v .: "seats"
+        <*> v .: "quota"
 
 -- Arguments
 
@@ -75,7 +79,7 @@ handleArg arg =
                            putStrLn ("The following error was returned: " ++ s)
                         
                         Right p ->
-                            print (brute (parties p) (Main.seats p))
+                            print (brute (quota p) (parties p) (Main.seats p))
 
 
             else

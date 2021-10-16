@@ -5,5 +5,6 @@
     { "name": "Party C", "votes": 30000 },
     { "name": "Party D", "votes": 20000 }
   ],
-  "seats": 8
+  "seats": 8,
+  "quota": "hare"
 }

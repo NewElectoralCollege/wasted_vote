@@ -1,6 +1,8 @@
 module Brute (brute) where
 
 import Lrm
+import Party
+import Quota
 
 import Data.List
 import Data.Maybe
@@ -28,44 +30,44 @@ total (WastedVote {wasted = wasted,represented = represented}) =
 
 -- Process
 
-brute :: [Party] -> Int -> [WastedVote]
-brute p1 seats = 
+brute :: Quota -> [Party] -> Int -> [WastedVote]
+brute quota p1 seats = 
        map fm p2
        where
            p2 = if totalSeats p1 == 0
-                    then hareMethod seats p1
+                    then lrm quota seats p1
                     else p1
-           fm = bruteParty p2 seats
+           fm = bruteParty quota p2 seats
 
 
-bruteParty :: [Party] -> Int -> Party -> WastedVote
-bruteParty parties seats p =
-    if Lrm.seats p == 0
+bruteParty :: Quota -> [Party] -> Int -> Party -> WastedVote
+bruteParty quota parties seats p =
+    if Party.seats p == 0
         then noSeats p
-        else withSeats parties seats p
+        else withSeats quota parties seats p
 
 
 updateParty :: [Party] -> Party -> Int -> [Party]
 updateParty parties party votes =
     party { votes = votes } :
-    filter ((/=) (Lrm.name party) . Lrm.name) parties
+    filter ((/=) (Party.name party) . Party.name) parties
 
 noSeats :: Party -> WastedVote
 noSeats p =
-    WastedVote (Lrm.name p) (votes p) 0
+    WastedVote (Party.name p) (votes p) 0
 
-withSeats :: [Party] -> Int -> Party -> WastedVote
-withSeats parties seats p =
-        WastedVote (Lrm.name p) (Lrm.votes p - nwv) nwv
+withSeats :: Quota -> [Party] -> Int -> Party -> WastedVote
+withSeats quota parties seats p =
+        WastedVote (Party.name p) (Party.votes p - nwv) nwv
     where
         s = show (votes p)
         d reduction votes
-            | Lrm.seats np == Lrm.seats p = d reduction (votes - reduction)
+            | Party.seats np == Party.seats p = d reduction (votes - reduction)
             | reduction == 1 = votes
             | otherwise = d (reduction `div` 10) (votes + reduction)
             where
-                nps = hareMethod seats $ updateParty parties p votes
-                np = fromMaybe p $ find ((==) (Lrm.name p) . Lrm.name) nps
+                nps = lrm quota seats $ updateParty parties p votes
+                np = fromMaybe p $ find ((==) (Party.name p) . Party.name) nps
         ir = 10 ^ (length s - 1)
-        nwv = d ir (Lrm.votes p)
+        nwv = d ir (Party.votes p)
         
