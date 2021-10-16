@@ -1,6 +1,9 @@
-[
-  { "name": "Party A", "votes": 100000 },
-  { "name": "Party B", "votes": 80000 },
-  { "name": "Party C", "votes": 30000 },
-  { "name": "Party D", "votes": 20000 }
-]
+{
+  "parties": [
+    { "name": "Party A", "votes": 100000 },
+    { "name": "Party B", "votes": 80000 },
+    { "name": "Party C", "votes": 30000 },
+    { "name": "Party D", "votes": 20000 }
+  ],
+  "seats": 8
+}
