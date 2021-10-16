@@ -26,19 +26,6 @@ total (WastedVote {wasted = wasted,represented = represented}) =
 -- (%) wv =
 --     fromInt $ (wasted wv) `div` (total wv)
 
--- Classification
-
-data Classification
-    = NoSeats
-    | ExtraSeat
-    | NoExtraSeat
-
-classify :: Party -> Classification
-classify p
-    | seats p == 0 = NoSeats
-    | extra_seat p = ExtraSeat
-    | otherwise    = NoExtraSeat
-
 -- Process
 
 brute :: [Party] -> Int -> [WastedVote]
@@ -53,25 +40,22 @@ brute p1 seats =
 
 bruteParty :: [Party] -> Int -> Party -> WastedVote
 bruteParty parties seats p =
-    case classify p of
-        NoSeats -> noSeats p
-        ExtraSeat -> extraSeat parties seats p
-        NoExtraSeat -> extraSeat parties seats p
+    if Lrm.seats p == 0
+        then noSeats p
+        else withSeats parties seats p
 
 
 updateParty :: [Party] -> Party -> Int -> [Party]
 updateParty parties party votes =
     party { votes = votes } :
     filter ((/=) (Lrm.name party) . Lrm.name) parties
-   
-
 
 noSeats :: Party -> WastedVote
 noSeats p =
     WastedVote (Lrm.name p) (votes p) 0
 
-extraSeat :: [Party] -> Int -> Party -> WastedVote
-extraSeat parties seats p =
+withSeats :: [Party] -> Int -> Party -> WastedVote
+withSeats parties seats p =
         WastedVote (Lrm.name p) (Lrm.votes p - nwv) nwv
     where
         s = show (votes p)
