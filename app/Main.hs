@@ -1,3 +1,4 @@
+{-# LANGUAGE OverloadedStrings #-}
 module Main where
 
 import qualified System.Exit as Exit
@@ -10,6 +11,7 @@ import Data.String
 import qualified Data.ByteString.Lazy as B
 
 import Lrm
+import Brute
 
 version = "0.1"
 
@@ -18,6 +20,18 @@ main =
     do args <- Env.getArgs
        handleArgs args
        Exit.exitSuccess
+
+-- Elections
+
+data Election = Election
+    { parties :: [Party]
+    , seats :: Int
+    } deriving (Show)
+
+instance FromJSON Election where
+    parseJSON = withObject "Election" $ \v -> Election
+        <$> v .: "parties"
+        <*> v .: "seats"
 
 -- Arguments
 
@@ -55,13 +69,13 @@ handleArg arg =
         
         a ->
             if FP.takeExtension a == ".json" then
-                do r <- (eitherDecode <$> getJson a) :: IO (Either String [Party])
+                do r <- (eitherDecode <$> getJson a) :: IO (Either String Election)
                    case r of
                         Left s ->
                            putStrLn ("The following error was returned: " ++ s)
                         
                         Right p ->
-                            putStrLn "Hello"
+                            print (brute (parties p) (Main.seats p))
 
 
             else
