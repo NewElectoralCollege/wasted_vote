@@ -1,5 +1,5 @@
 {-# LANGUAGE DeriveGeneric, OverloadedStrings, TypeSynonymInstances, FlexibleInstances #-}
-module Lrm where
+module Lrm (Party(..), seats, extraVotes, totalSeats, totalVotes, hareMethod) where
 
 import Data.Aeson
 import Data.Aeson.Types
@@ -40,10 +40,13 @@ extraVotes quota party = votes party - (initial_seats party * quota)
 totalVotes :: [Party] -> Int
 totalVotes list = sum $ map votes list
 
+totalSeats :: [Party] -> Int
+totalSeats list = sum $ map seats list
+
 quotaSeats :: Int -> [Party] -> [Party]
 quotaSeats _ [] = []
 quotaSeats quota (x:xs) =
-  x {initial_seats = votes x `div` quota} : quotaSeats quota xs
+  x {initial_seats = votes x `div` quota, extra_seat = False} : quotaSeats quota xs
 
 extraSeats :: Int -> ([Party], [Party]) -> [Party]
 extraSeats _ (l, []) = l
