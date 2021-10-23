@@ -38,6 +38,8 @@ Executable wasted-vote
                       Brute
                       Quota
                       Party
+                      Output
+                      WastedVote
     hs-source-dirs:   app
     build-depends:    base ^>=4.15.0.0,
                       aeson >= 1.5.6.0,
