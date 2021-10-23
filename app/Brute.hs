@@ -3,41 +3,24 @@ module Brute (brute) where
 import Lrm
 import Party
 import Quota
+import WastedVote
+import Output
 
 import Data.List
 import Data.Maybe
 
 
--- Wasted Vote type
-
-data WastedVote = WastedVote
-    { name :: String
-    , wasted :: Int
-    , represented :: Int
-    }
-
-instance Show WastedVote where
-    show wv = Brute.name wv ++ ": " ++ show (wasted wv) ++ "/" ++ show (represented wv) ++ "\n"
-
-total :: WastedVote -> Int
-total (WastedVote {wasted = wasted,represented = represented}) =
-    wasted + represented
-
-
--- (%) :: WastedVote -> Float
--- (%) wv =
---     fromInt $ (wasted wv) `div` (total wv)
-
 -- Process
 
-brute :: Quota -> [Party] -> Int -> [WastedVote]
+brute :: Quota -> [Party] -> Int -> Output
 brute quota p1 seats = 
-       map fm p2
+       Output wv p2 seats quota
        where
            p2 = if totalSeats p1 == 0
                     then lrm quota seats p1
                     else p1
            fm = bruteParty quota p2 seats
+           wv = map fm p2
 
 
 bruteParty :: Quota -> [Party] -> Int -> Party -> WastedVote
