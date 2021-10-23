@@ -12,15 +12,17 @@ import qualified Data.ByteString.Lazy as B
 
 import Lrm
 import Brute
+import qualified Output as O
 import Party
 import Quota
+import Control.Monad
 
 version = "0.1"
 
 main :: IO ()
 main = 
     do args <- Env.getArgs
-       handleArgs args
+       handleArgs (Write . show) args
        Exit.exitSuccess
 
 -- Elections
@@ -39,16 +41,23 @@ instance FromJSON Election where
 
 -- Arguments
 
-handleArg :: String -> IO ()
-handleArg arg =
+data Argument
+    = Write String
+    | Location String
+    | Save String B.ByteString
+    | Fail String
+
+identifyArg :: (O.Output -> Argument) -> String -> IO Argument
+identifyArg retfunc arg =
     case arg of
         "--help" ->
-            putStrLn $ unlines 
+            return $ Write $ unlines 
                 [ "-------------------------------------------------------------------------------"
                 , "Thank You for using this program!"
                 , "  x   --help                 Display this message."
                 , "  x   --version              Show the version of the program."
                 , "  x   --example              Creates an example JSON file."
+                , "  x   --out=*.json           Writes results to a JSON file."
                 , "  x   *.json                 Run program with JSON file."
                 , ""
                 , "Source:"
@@ -60,10 +69,10 @@ handleArg arg =
                 ]
 
         "--version" ->
-            putStrLn version
+            return $ Write version
 
         "--example" ->
-            B.writeFile "example.json" $ fromString
+            return $ Save "example.json"
                 "[\n\
                 \  { \"name\": \"Party A\", \"votes\": 100000 },\n\
                 \  { \"name\": \"Party B\", \"votes\": 80000 },\n\
@@ -72,29 +81,27 @@ handleArg arg =
                 \]"
         
         a ->
-            if FP.takeExtension a == ".json" then
-                do r <- (eitherDecode <$> getJson a) :: IO (Either String Election)
-                   case r of
-                        Left s ->
-                           putStrLn ("The following error was returned: " ++ s)
-                        
-                        Right p ->
-                            print (brute (quota p) (parties p) (Main.seats p))
+            if take 6 a == "--out=" 
+                then return $ Location $ drop 6 a
+                else if FP.takeExtension a == ".json" then
+                    do ri <- ((eitherDecode <$> B.readFile a) :: IO (Either String Election))
+                       case ri of
+                            Left s ->
+                                return $ Fail ("The following error was returned: " ++ s)
+                
+                            Right p ->
+                                return $ retfunc (brute (quota p) (parties p) (Main.seats p))
+                else return $ Fail ("I can't identify this argument: " ++ a)
 
 
-            else
-
-            do putStrLn ("I can't identify this argument: " ++ a)
-               Exit.exitFailure
-
-handleArgs :: [String] -> IO ()
-handleArgs [] = Exit.exitFailure
-handleArgs (x:xs) = handleArg x
-
--- Json
-
-getJson :: String -> IO B.ByteString 
-getJson = B.readFile
-
-
+handleArgs :: (O.Output -> Argument) -> [String] -> IO ()
+handleArgs _ [] = Exit.exitFailure
+handleArgs retfunc (x:xs) = 
+    do r <- identifyArg retfunc x
+       case r of
+            Write s -> putStrLn s
+            Location l -> handleArgs (Save l . encode) xs
+            Save f t -> B.writeFile f t
+            Fail f -> do putStrLn f
+                         Exit.exitFailure
 
