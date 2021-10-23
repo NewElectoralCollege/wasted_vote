@@ -5,7 +5,7 @@ This is a Haskell module written by the official campaign for The New Electoral 
 - Calculating the number of wasted votes (see definition below) in an election held under Party-List proportional representation
 - Produces breakdown of wasted votes by party
 - Unlimited number of parties
-- Hare, Droop, Hagenbach-Bischoff, and Imperiali
+- Hare, Droop, Hagenbach-Bischoff, and Imperiali quotas
 
 # Specs
 
