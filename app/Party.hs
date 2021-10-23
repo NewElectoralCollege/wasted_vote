@@ -22,6 +22,14 @@ instance FromJSON Party where
         <*> pure 0
         <*> pure False
 
+instance ToJSON Party where
+  toJSON p = object
+    [ "name" .= name p
+    , "votes" .= votes p
+    , "initial_seats" .= initial_seats p
+    , "extra_seat" .= extra_seat p
+    ]
+
 seats :: Party -> Int
 seats Party {extra_seat = es, initial_seats = is}
   | es = is + 1
