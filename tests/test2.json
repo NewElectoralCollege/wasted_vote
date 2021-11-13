@@ -1,0 +1,14 @@
+{
+  "parties": [
+    { "name": "Party A", "votes": 2651987 },
+    { "name": "Party B", "votes": 1117403 },
+    { "name": "Party C", "votes": 1049040 },
+    { "name": "Party D", "votes": 681448 },
+    { "name": "Party E", "votes": 449440 },
+    { "name": "Party F", "votes": 277940 },
+    { "name": "Party G", "votes": 191804 },
+    { "name": "Party H", "votes": 79818 }
+  ],
+  "seats": 10,
+  "quota": "hare"
+}
