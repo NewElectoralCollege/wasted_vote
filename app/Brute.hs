@@ -14,13 +14,13 @@ import Data.Maybe
 
 brute :: Quota -> [Party] -> Int -> Output
 brute quota p1 seats = 
-       Output wv p2 seats quota
-       where
-           p2 = if totalSeats p1 == 0
-                    then lrm quota seats p1
-                    else p1
-           fm = bruteParty quota p2 seats
-           wv = map fm p2
+    Output wv p2 seats quota
+    where
+        p2 = if totalSeats p1 == 0
+                then lrm quota seats p1
+                else p1
+        fm = bruteParty quota p2 seats
+        wv = map fm p2
 
 
 bruteParty :: Quota -> [Party] -> Int -> Party -> WastedVote
