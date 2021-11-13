@@ -41,5 +41,5 @@ lrm qt s list =
   tp $ sortOn (Down . extraVotes quota) $ quotaSeats quota list
   where
     tv = totalVotes list
-    quota = (hare `for` tv) s
+    quota = (qt `for` tv) s
 
