@@ -18,6 +18,6 @@ This program was written, compiled, and tested using the following:
 
 # Helpful Links
 
-- [New Electoral College](newelectoralcollege.com)
-- [Haskell](haskell.org)
-- [Learn Haskell](schoolofhaskell.com)
+- [New Electoral College](https://newelectoralcollege.com)
+- [Haskell](https://haskell.org)
+- [Learn Haskell](https://schoolofhaskell.com)
