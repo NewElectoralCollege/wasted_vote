@@ -12,7 +12,8 @@ import Data.Aeson
 -- Json
 
 data Output = Output
-    { wasted_vote :: [WastedVote]
+    { name :: Maybe String
+    , wasted_vote :: [WastedVote]
     , parties :: [P.Party]
     , seats :: Int
     , quota :: Quota
@@ -22,7 +23,9 @@ data Output = Output
 
 instance Show Output where
     show o = unlines 
-        [ "Seats:" 
+        [ "Name:"
+        , show $ Output.name o
+        , "Seats:" 
         , show $ parties o
         , "\n"
         , "Wasted Votes:"
@@ -36,7 +39,8 @@ instance Show Output where
 
 instance ToJSON Output where
     toJSON o = object 
-        [ "wasted_vote" .= wasted_vote o
+        [ "name" .= Output.name o
+        , "wasted_vote" .= wasted_vote o
         , "parties" .= parties o
         , "seats" .= seats o
         , "quota" .= makeQuota o
