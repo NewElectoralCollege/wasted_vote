@@ -12,9 +12,9 @@ import Data.Maybe
 
 -- Process
 
-brute :: Quota -> [Party] -> Int -> Output
-brute quota p1 seats = 
-    Output wv p2 seats quota
+brute :: Maybe String -> Quota -> [Party] -> Int -> Output
+brute name quota p1 seats = 
+    Output name wv p2 seats quota
     where
         p2 = if totalSeats p1 == 0
                 then lrm quota seats p1
