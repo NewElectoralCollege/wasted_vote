@@ -17,7 +17,7 @@ import qualified Election as E
 import Brute
 import qualified Output as O
 
-version = "0.1"
+version = "1.1.1"
 
 main :: IO ()
 main = 
